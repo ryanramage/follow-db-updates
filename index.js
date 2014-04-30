@@ -20,6 +20,12 @@ function dbchange(couch_url, suggest_mode) {
     events.EventEmitter.call(this);
 
     all_dbs(function(err, db_list){
+        if (err) {
+            me.emit('error', err);
+            current_dbs = [];
+            return
+        }
+
         current_dbs = db_list;
         me.emit('init', current_dbs);
     });
