@@ -8,7 +8,7 @@ var events = require('events'),
     difference = require('lodash.difference');
 
 
-function dbchange(couch_url) {
+function dbchange(couch_url, suggest_mode) {
     var me = this,
         modes = {
             changes: changes,
@@ -24,9 +24,13 @@ function dbchange(couch_url) {
         me.emit('init', current_dbs);
     });
 
-    poll_mode(function(err, mode){
-        modes[mode]();
-    });
+    if (suggest_mode) modes[suggest_mode]();
+    else {
+        poll_mode(function(err, mode){
+            modes[mode]();
+        });
+    }
+
 
     function changes() {
         var changes_url = url.resolve(couch_url, '_db_updates'),
